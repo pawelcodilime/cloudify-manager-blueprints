@@ -1,8 +1,7 @@
 tosca_definitions_version: cloudify_dsl_1_1
 
 imports:
-  # - http://www.getcloudify.org/spec/cloudify/3.2/types.yaml
-  - https://raw.githubusercontent.com/cloudify-cosmo/cloudify-manager/CFY-3065-refactor-manager-node-types-yaml/resources/rest-service/cloudify/types/types.yaml
+  - https://raw.githubusercontent.com/cloudify-cosmo/cloudify-manager/CFY-GIVEAWAY/resources/rest-service/cloudify/types/types.yaml
   - https://raw.githubusercontent.com/cloudify-cosmo/cloudify-fabric-plugin/master/plugin.yaml
   - manager-types.yaml
 
@@ -37,10 +36,6 @@ inputs:
   #############################
   # Cloudify Modules
   #############################
-  cli_source_url:
-    type: string
-    default: https://github.com/cloudify-cosmo/cloudify-cli/archive/master.tar.gz
-
   rest_service_source_url:
     type: string
     default: https://github.com/cloudify-cosmo/cloudify-manager/archive/3.3m2.tar.gz
@@ -74,7 +69,6 @@ inputs:
   #############################
   java_source_url:
     type: string
-    # default: http://javadl.sun.com/webapps/download/AutoDL?BundleId=106239
     default: https://dl.dropboxusercontent.com/u/407576/3.2/java.rpm
 
   #############################
@@ -206,7 +200,6 @@ node_templates:
 
     interfaces:
       cloudify.interfaces.lifecycle:
-        # create: components/upload_provider_context.sh
         create:
           implementation: fabric.fabric_plugin.tasks.run_script
           inputs:
@@ -214,9 +207,7 @@ node_templates:
             fabric_env:
               user: { get_input: ssh_user }
               key_filename: { get_input: ssh_key_filename }
-              # SCREAM! should use get_property from the manager_host node?
               host_string: { get_property: [manager_host, public_ip] }
-              # host_string: { get_input: public_ip }
               always_use_pty: true
 
     relationships:
@@ -292,9 +283,6 @@ node_templates:
     relationships:
       - type: cloudify.relationships.contained_in
         target: manager_host
-      # awaiting solution for circular relationship
-      # - type: nginx_to_webui
-      #   target: webui
       - type: nginx_to_restservice
         target: rest_service
 
@@ -351,26 +339,8 @@ node_templates:
     relationships:
       - type: cloudify.relationships.contained_in
         target: manager_host
-      # awaiting solution for circular relationship
-      # - type: webui_to_nginx
-      #   target: nginx
       - type: webui_to_influxdb
         target: influxdb
-
-  ######################################################################
-  # Enable this node if you want to have the CLI installed within
-  # the manager. This might aid in debugging problems or just
-  # controlling the manager from within itself.
-  ######################################################################
-  # cli:
-  #   type: manager.nodes.CLI
-  #   relationships:
-  #     - type: cloudify.relationships.contained_in
-  #       target: manager_host
-  #     - type: cloudify.relationships.depends_on
-  #       target: nginx
-  #     - type: cloudify.relationships.depends_on
-  #       target: restservice
 
 
 plugins:
