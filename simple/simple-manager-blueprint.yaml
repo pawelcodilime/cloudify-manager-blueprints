@@ -2,7 +2,7 @@ tosca_definitions_version: cloudify_dsl_1_1
 
 imports:
   - https://raw.githubusercontent.com/cloudify-cosmo/cloudify-manager/CFY-GIVEAWAY/resources/rest-service/cloudify/types/types.yaml
-  - https://raw.githubusercontent.com/cloudify-cosmo/cloudify-fabric-plugin/master/plugin.yaml
+  - https://raw.githubusercontent.com/cloudify-cosmo/cloudify-fabric-plugin/1.3m2/plugin.yaml
   - manager-types.yaml
 
 
