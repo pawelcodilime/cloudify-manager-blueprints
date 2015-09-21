@@ -46,7 +46,7 @@ node_types:
         description: >
           Security Configuration for Cloudify Manager
         default:
-          enabled: false
+          enabled: true
           #########################################################################
           # A list of one or more authentication providers. Cloudify will use
           # these providers in the order specified in the list (Mandatory).
