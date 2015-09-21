@@ -47,19 +47,19 @@ inputs:
   #############################
   rest_service_rpm_source_url:
     type: string
-    default: https://gigaspaces-repository-eu.s3.amazonaws.com/org/cloudify3/3.3.0/m5-RELEASE/cloudify-rest-service-3.3.0-m5_b275.x86_64.rpm
+    default: https://github.com/cloudify-cosmo/cloudify-dsl-parser/archive/master.tar.gz
 
   management_worker_rpm_source_url:
     type: string
-    default: https://gigaspaces-repository-eu.s3.amazonaws.com/org/cloudify3/3.3.0/m5-RELEASE/cloudify-management-worker-3.3.0-m5_b275.x86_64.rpm
+    default: https://github.com/cloudify-cosmo/cloudify-rest-client/archive/master.tar.gz
 
   amqpinflux_rpm_source_url:
     type: string
-    default: https://gigaspaces-repository-eu.s3.amazonaws.com/org/cloudify3/3.3.0/m5-RELEASE/cloudify-amqp-influx-3.3.0-m5_b275.x86_64.rpm
+    default: https://github.com/cloudify-cosmo/cloudify-plugins-common/archive/master.tar.gz
 
   cloudify_resources_url:
     type: string
-    default: https://github.com/cloudify-cosmo/cloudify-manager/archive/master.tar.gz
+    default: https://github.com/cloudify-cosmo/cloudify-script-plugin/archive/master.tar.gz
 
   #############################
   # Python Inputs
@@ -411,11 +411,11 @@ node_templates:
       - type: logstash_to_elasticsearch
         target: elasticsearch
 
-  influxdb:
-    type: manager.nodes.InfluxDB
-    relationships:
-      - type: cloudify.relationships.contained_in
-        target: manager_host
+#  influxdb:
+#    type: manager.nodes.InfluxDB
+#    relationships:
+#      - type: cloudify.relationships.contained_in
+#        target: manager_host
 
   nginx:
     type: manager.nodes.Nginx
@@ -433,17 +433,17 @@ node_templates:
       # - type: nginx_to_webui
       #   target: webui
 
-  riemann:
-    type: manager.nodes.Riemann
-    relationships:
-      - type: cloudify.relationships.contained_in
-        target: manager_host
-      - type: cloudify.relationships.depends_on
-        target: java_runtime
-      - type: riemann_to_rabbitmq
-        target: rabbitmq
-      - type: riemann_to_nginx
-        target: nginx
+#  riemann:
+#    type: manager.nodes.Riemann
+#    relationships:
+#      - type: cloudify.relationships.contained_in
+#        target: manager_host
+#      - type: cloudify.relationships.depends_on
+#        target: java_runtime
+#      - type: riemann_to_rabbitmq
+#        target: rabbitmq
+#      - type: riemann_to_nginx
+#        target: nginx
 
   rest_service:
     type: manager.nodes.RestService
@@ -480,19 +480,19 @@ node_templates:
         target: python_runtime
       - type: amqpinflux_to_rabbitmq
         target: rabbitmq
-      - type: amqpinflux_to_influxdb
-        target: influxdb
+#      - type: amqpinflux_to_influxdb
+#        target: influxdb
 
-  webui:
-    type: manager.nodes.WebUI
-    relationships:
-      - type: cloudify.relationships.contained_in
-        target: manager_host
-      # circular relationship
-      # - type: webui_to_nginx
-      #   target: nginx
-      - type: webui_to_influxdb
-        target: influxdb
+#  webui:
+#    type: manager.nodes.WebUI
+#    relationships:
+#      - type: cloudify.relationships.contained_in
+#        target: manager_host
+#      # circular relationship
+#      # - type: webui_to_nginx
+#      #   target: nginx
+#      - type: webui_to_influxdb
+#        target: influxdb
 
   ######################################################################
   # Enable this node if you want to have the CLI installed within

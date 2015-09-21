@@ -72,14 +72,15 @@ EOF
 sudo chmod 644 $lconf
 
 
-
-
 ctx logger info "Starting Elasticsearch for configuration purposes..."
 sudo systemctl enable elasticsearch.service &>/dev/null
 sudo systemctl start elasticsearch.service
 
 ctx logger info "Waiting for Elasticsearch to become available..."
 wait_for_port "${ELASTICSEARCH_PORT}"
+
+ctx logger info "Sleeping 10 seconds..."
+sleep 10
 
 ctx logger info "Configuring Elasticsearch Indices, Mappings, etc..."
 # per a function in configure_es
