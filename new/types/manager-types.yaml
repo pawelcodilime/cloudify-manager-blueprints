@@ -66,6 +66,9 @@ node_types:
               implementation: flask_securest.authentication_providers.token:TokenAuthenticator
               properties:
                 secret_key: my_secret
+          authorization_provider:
+            implementation: flask-securest.flask_securest.authorization_providers.authorize_all:AuthorizeAll
+            properties: {}
           #########################################################################
           # A user-store implementation is used to find a matching user
           # and load its details (Mandatory unless you specified a custom
@@ -80,6 +83,7 @@ node_types:
                 user:
                   username: { get_input: username }
                   password: { get_input: password }
+                  email: { concat: [{ get_input: username }, '@domain.com'] }
               identifying_attribute: username
           #########################################################################
           # REST calls to "MANAGER_IP/tokens" will generate and return
