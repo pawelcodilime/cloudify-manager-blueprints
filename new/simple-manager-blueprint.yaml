@@ -36,11 +36,23 @@ inputs:
   #############################
   # Security Setting
   #############################
-  username:
+  security_enabled:
+    default: true
+
+  ssl_enabled:
+    default: false
+
+  admin_username:
     default: admin
 
-  password:
+  admin_password:
     default: admin
+
+  workflow_username:
+    default: workflow_rabbit
+
+  workflow_password:
+    default: workflow_rabbit
 
   #############################
   # Cloudify Modules
