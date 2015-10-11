@@ -40,7 +40,7 @@ inputs:
     default: true
 
   ssl_enabled:
-    default: false
+    default: true
 
   admin_username:
     default: admin
