@@ -6,8 +6,6 @@ imports:
   - types/manager-types.yaml
 
 
-
-
 inputs:
 
   #############################
@@ -297,7 +295,6 @@ node_types:
       public_ip:
         type: string
         default: { get_input: public_ip }
-
 
 ######################################################################
 # These nodes comprise the manager's infrastructure and components

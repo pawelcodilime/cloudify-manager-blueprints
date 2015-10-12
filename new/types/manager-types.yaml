@@ -624,6 +624,16 @@ relationships:
       cloudify.interfaces.relationship_lifecycle:
         postconfigure: components/manager/scripts/set_manager_private_ip.sh
 
+  pepper_depends_on_userdata:
+    derived_from: cloudify.relationships.depends_on
+    target_interfaces:
+      cloudify.interfaces.relationship_lifecycle:
+        preconfigure:
+          implementation: script.script_runner.tasks.run
+            inputs:
+            script_path: components/restservice/scripts/the_script_in_question.py
+          executor: central_deployment_agent
+
   rest_to_mgr_config:
       derived_from: cloudify.relationships.depends_on
       target_interfaces:
