@@ -51,5 +51,3 @@ if [ ! -z ${REST_SERVICE_SOURCE_URL} ]; then
     install_module "/tmp/plugins/riemann-controller" ${MGMTWORKER_VIRTUALENV_DIR}
     install_module "/tmp/workflows" ${MGMTWORKER_VIRTUALENV_DIR}
 fi
-
-configure_systemd_service "mgmtworker"

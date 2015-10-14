@@ -42,6 +42,9 @@ inputs:
   ssl_enabled:
     default: true
 
+  verify_certificate:
+    default: true
+
   admin_username:
     default: admin
 
@@ -477,6 +480,8 @@ node_templates:
         target: python_runtime
       - type: mgmtworker_to_rabbitmq
         target: rabbitmq
+      - type: mgmtworker_to_mgr_config
+        target: manager_configuration
       - type: mgmtworker_to_nginx
         target: nginx
 

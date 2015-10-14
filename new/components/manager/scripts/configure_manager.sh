@@ -21,15 +21,19 @@ function _set_rest_port() {
 
     ssl_enabled=$(ctx -j node properties security.ssl.enabled)
     ctx logger info "***** ssl_enabled is $ssl_enabled"
-    ctx logger info $ssl_enabled
 
     if ${security_enabled} == true && ${ssl_enabled} == true ; then
         ctx logger info "SSL is enabled, setting rest port to 443..."
         ctx instance runtime_properties rest_port 443
+        ctx logger info "Reading verify_certificate..."
+        # verify_certificate=$(ctx -j node properties security.ssl.verify_certificate)
+        # ctx instance runtime_properties verify_certificate ${verify_certificate}
+        # ctx logger info "***** verify_certificate is $verify_certificate"
     else
         ctx logger info "Security is off or SSL not enabled, setting rest port to 80..."
         ctx instance runtime_properties rest_port 80
     fi
+
 }
 
 

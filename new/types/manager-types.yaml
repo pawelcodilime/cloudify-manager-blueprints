@@ -37,8 +37,6 @@ node_types:
             task_retry_interval: 30
           policy_engine:
             start_timeout: 30
-          rest:
-            ssl: { get_input: ssl_enabled }
       #########################################################################
       # Setting 'enabled' to true will activate security on the REST service,
       # according to the below configuration. Each request received by the
@@ -108,6 +106,7 @@ node_types:
           #########################################################################
           ssl:
             enabled: { get_input: ssl_enabled }
+            verify_certificate: { get_input: verify_certificate }
           #########################################################################
           # Security log file properties (Optional, the default values are as
           # shown below).
@@ -479,6 +478,8 @@ node_types:
           inputs:
             script_path:
               default: components/mgmtworker/scripts/start.sh
+            MGR_REST_PORT:
+              default: { get_attribute: [manager_configuration, rest_port] }
             fabric_env: *simple_fabric_env
 
   manager.nodes.AmqpInfluxBroker:
@@ -606,7 +607,21 @@ relationships:
     derived_from: cloudify.relationships.connected_to
 
   mgmtworker_to_rabbitmq:
-    derived_from: cloudify.relationships.connected_to
+      derived_from: cloudify.relationships.connected_to
+
+  mgmtworker_to_mgr_config:
+    derived_from: cloudify.relationships.depends_on
+    target_interfaces:
+      cloudify.interfaces.relationship_lifecycle:
+        preconfigure:
+          implementation: fabric.fabric_plugin.tasks.run_script
+          inputs:
+            script_path:
+              default: components/mgmtworker/scripts/preconfigure.sh
+            MGR_REST_PORT:
+              default: { get_attribute: [manager_configuration, rest_port] }
+            fabric_env: *simple_fabric_env
+
 
   mgmtworker_to_nginx:
     derived_from: cloudify.relationships.connected_to
@@ -615,15 +630,15 @@ relationships:
         postconfigure: components/manager/scripts/set_manager_private_ip.sh
 
   rest_to_mgr_config:
-      derived_from: cloudify.relationships.depends_on
-      target_interfaces:
-        cloudify.interfaces.relationship_lifecycle:
-          preconfigure:
-            implementation: fabric.fabric_plugin.tasks.run_script
-            inputs:
-              script_path:
-                default: components/restservice/scripts/configure.sh
-              fabric_env: *simple_fabric_env
+    derived_from: cloudify.relationships.depends_on
+    target_interfaces:
+      cloudify.interfaces.relationship_lifecycle:
+        preconfigure:
+          implementation: fabric.fabric_plugin.tasks.run_script
+          inputs:
+            script_path:
+              default: components/restservice/scripts/configure.sh
+            fabric_env: *simple_fabric_env
 
   amqpinflux_to_rabbitmq:
     derived_from: cloudify.relationships.connected_to
