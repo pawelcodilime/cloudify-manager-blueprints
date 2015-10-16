@@ -36,7 +36,8 @@ PROVIDER_CONTEXT_RUNTIME_PROPERTY = 'provider_context'
 
 
 def configure(openstack_config):
-    _set_provider_context()
+    set_basic_provider_context()
+    _set_openstack_provider_context()
     _copy_openstack_configuration_to_manager(openstack_config)
 
 
@@ -57,7 +58,7 @@ def _copy_openstack_configuration_to_manager(openstack_config):
     fabric.api.put(tmp, '{0}'.format(config_path), use_sudo=True)
 
 
-def _set_provider_context():
+def _set_openstack_provider_context():
     # Do not use this code section as a reference - it is a workaround for a
     #  deprecated feature and will be removed in the near future
 
@@ -104,3 +105,10 @@ def _set_provider_context():
 
     ctx.instance.runtime_properties[PROVIDER_CONTEXT_RUNTIME_PROPERTY] = \
         provider
+
+
+def set_basic_provider_context():
+    ctx.logger.info('Setting cloudify configuration in provider_context...')
+    ctx.instance.runtime_properties['provider_context'] = {
+        'cloudify': ctx.node.properties['cloudify']
+    }

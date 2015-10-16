@@ -279,6 +279,10 @@ inputs:
     type: integer
     default: 102400
 
+  rabbitmq_endpoint_ip:
+    type: string
+    default: ''
+
   #############################
   # Elasticsearch Inputs
   #############################
@@ -639,6 +643,8 @@ node_templates:
         target: java_runtime
       - type: logstash_to_elasticsearch
         target: elasticsearch
+      - type: logstash_to_rabbitmq
+        target: rabbitmq
 
   influxdb:
     type: manager.nodes.InfluxDB

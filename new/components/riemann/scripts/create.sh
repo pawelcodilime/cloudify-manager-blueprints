@@ -10,6 +10,8 @@ export DAEMONIZE_SOURCE_URL=$(ctx node properties daemonize_rpm_source_url)  # (
 export RIEMANN_SOURCE_URL=$(ctx node properties riemann_rpm_source_url)  # (e.g. "https://aphyr.com/riemann/riemann-0.2.6-1.noarch.rpm")
 # Needed for Riemann's config
 export CLOUDIFY_RESOURCES_URL=$(ctx node properties cloudify_resources_url)
+# injected as an input to the script
+ctx instance runtime_properties rabbitmq_endpoint_ip ${RABBITMQ_ENDPOINT_IP}
 
 export RIEMANN_CONFIG_PATH="/etc/riemann"
 export RIEMANN_LOG_PATH="/var/log/cloudify/riemann"

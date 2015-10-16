@@ -8,6 +8,8 @@ export PLUGINS_COMMON_SOURCE_URL=$(ctx node properties plugins_common_module_sou
 export SCRIPT_PLUGIN_SOURCE_URL=$(ctx node properties script_plugin_module_source_url)  # (e.g. "https://github.com/cloudify-cosmo/cloudify-script-plugin/archive/1.2.zip")
 export REST_SERVICE_SOURCE_URL=$(ctx node properties rest_service_module_source_url)  # (e.g. "https://github.com/cloudify-cosmo/cloudify-manager/archive/3.2.tar.gz")
 export AGENT_SOURCE_URL=$(ctx node properties agent_module_source_url)
+# injected as an input to the script
+ctx instance runtime_properties rabbitmq_endpoint_ip ${RABBITMQ_ENDPOINT_IP}
 
 # This will only be used if the management worker is not installed via an RPM
 export CELERY_VERSION="3.1.17"

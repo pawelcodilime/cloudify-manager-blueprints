@@ -70,7 +70,7 @@ function curl_download_with_retries
     destination=$2
 
     # this will use an exponential backoff algorithm 10 times before it fails.
-    curl --retry 10 --fail --silent --show-error --location ${source} --create-dirs --output ${destination}
+    curl --retry 10 --fail --show-error --location ${source} --create-dirs --output ${destination}
 }
 
 function wget_download_with_retries
@@ -410,3 +410,4 @@ function clean_var_log_dir() {
 }
 
 CLOUDIFY_SOURCES_PATH="/opt/cloudify/sources"
+

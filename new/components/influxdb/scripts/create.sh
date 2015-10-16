@@ -47,6 +47,9 @@ EOF
 
     ctx logger info "Deploying InfluxDB Config file..."
     deploy_blueprint_resource "${CONFIG_REL_PATH}/config.toml" "${INFLUXDB_HOME}/shared/config.toml"
+    ctx logger info "Fixing permissions..."
+    sudo chown -R "${INFLUXDB_USER}:${INFLUXDB_GROUP}" "${INFLUXDB_HOME}"
+    sudo chown -R "${INFLUXDB_USER}:${INFLUXDB_GROUP}" "${INFLUXDB_LOG_PATH}"
 
     ctx logger info "Fixing permissions..."
     sudo chown -R "${INFLUXDB_USER}:${INFLUXDB_GROUP}" "${INFLUXDB_HOME}"

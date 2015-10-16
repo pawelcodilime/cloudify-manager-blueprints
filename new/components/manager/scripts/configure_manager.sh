@@ -13,6 +13,12 @@ function _post_provider_context() {
     curl --fail --silent --request POST --data @${PROVIDER_CONTEXT_FILE} http://localhost/api/v2/provider/context --header "Content-Type:application/json" >/dev/null
 }
 
+# function _set_provider_context() {
+#     cloudify_configuration="$(ctx -j node properties cloudify)"
+#     ctx logger info "Appending ${cloudify_configuration} to provider_context..."
+#     ctx -j instance runtime_properties provider_context.cloudify "${cloudify_configuration}"
+# }
+
 
 function _set_rest_port() {
     security_enabled=$(ctx -j node properties security.enabled)
@@ -101,5 +107,6 @@ function _disable_requiretty() {
 # ctx logger info "OUTCOME: $(sudo cat /etc/sudoers | grep requiretty)"
 
 # _post_provider_context
+# _set_provider_context
 _disable_requiretty
 _set_rest_port

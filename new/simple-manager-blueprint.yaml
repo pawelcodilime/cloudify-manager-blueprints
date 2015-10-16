@@ -198,6 +198,10 @@ inputs:
     type: integer
     default: 102400
 
+  rabbitmq_endpoint_ip:
+    type: string
+    default: ''
+
   #############################
   # Elasticsearch Inputs
   #############################
@@ -340,6 +344,11 @@ node_templates:
           max_workers: 5
           remote_execution_port: 22
           user: { get_input: agents_user }
+          # This is set automatically by the `rabbitmq` node when choosing to use
+          # an external RabbitMQ cluster via the `rabbitmq_endpoint_ip` input.
+          # if the input is not supplied, the `manager_host`'s node instance ip
+          # will be used.
+          #broker_ip: ''
 
         workflows:
           task_retries: -1  # this means forever
@@ -354,11 +363,17 @@ node_templates:
           implementation: fabric.fabric_plugin.tasks.run_script
           inputs:
             script_path: components/manager/scripts/configure_manager.sh
-            fabric_env:
+            fabric_env: &simple_fabric_env
               user: { get_input: ssh_user }
               key_filename: { get_input: ssh_key_filename }
               host_string: { get_property: [manager_host, public_ip] }
               always_use_pty: true
+        configure:
+          implementation: fabric.fabric_plugin.tasks.run_task
+          inputs:
+            tasks_file: components/manager/scripts/configure_basic.py
+            task_name: set_basic_provider_context
+            fabric_env: *simple_fabric_env
 
     relationships:
       - type: cloudify.relationships.contained_in
@@ -399,6 +414,8 @@ node_templates:
     relationships:
       - type: cloudify.relationships.contained_in
         target: manager_host
+      - type: rabbitmq_on_mgr_config
+        target: manager_configuration
 
   elasticsearch:
     type: manager.nodes.Elasticsearch
@@ -417,6 +434,8 @@ node_templates:
         target: java_runtime
       - type: logstash_to_elasticsearch
         target: elasticsearch
+      - type: logstash_to_rabbitmq
+        target: rabbitmq
 
   influxdb:
     type: manager.nodes.InfluxDB

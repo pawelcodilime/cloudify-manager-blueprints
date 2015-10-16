@@ -6,6 +6,8 @@
 CONFIG_REL_PATH="components/logstash/config"
 
 export LOGSTASH_SOURCE_URL=$(ctx node properties logstash_rpm_source_url)  # (e.g. "https://download.elasticsearch.org/logstash/logstash/logstash-1.4.2.tar.gz")
+# injected as an input to the script
+ctx instance runtime_properties rabbitmq_endpoint_ip ${RABBITMQ_ENDPOINT_IP}
 
 # injected as an input to the script
 ctx instance runtime_properties es_endpoint_ip ${ES_ENDPOINT_IP}

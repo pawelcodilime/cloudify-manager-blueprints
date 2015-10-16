@@ -106,6 +106,10 @@
 # RabbitMQ File Descriptors Limit
 #rabbitmq_fd_limit: 102400
 
+# Allows to configure the endpoint of an optional RabbitMQ Cluster.
+# This defaults to a RabbitMQ that is provisioned with the manager.
+#rabbitmq_endpoint_ip: localhost
+
 #############################
 # Elasticsearch Configuration
 #############################

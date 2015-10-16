@@ -185,6 +185,10 @@ node_types:
         description: RabbitMQ File Descriptors Limit
         type: integer
         default: { get_input: rabbitmq_fd_limit }
+      rabbitmq_endpoint_ip:
+        description: An IP to an alternative RabbitMQ Cluster.
+        type: string
+        default: { get_input: rabbitmq_endpoint_ip }
     interfaces:
       cloudify.interfaces.lifecycle:
         create:
@@ -285,6 +289,8 @@ node_types:
             fabric_env: *simple_fabric_env
             ES_ENDPOINT_IP:
               default: { get_attribute: [elasticsearch, es_endpoint_ip] }
+            RABBITMQ_ENDPOINT_IP:
+              default: { get_attribute: [rabbitmq, rabbitmq_endpoint_ip] }
         start:
           implementation: fabric.fabric_plugin.tasks.run_script
           inputs:
@@ -399,6 +405,8 @@ node_types:
             script_path:
               default: components/riemann/scripts/create.sh
             fabric_env: *simple_fabric_env
+            RABBITMQ_ENDPOINT_IP:
+              default: { get_attribute: [rabbitmq, rabbitmq_endpoint_ip] }
         start:
           implementation: fabric.fabric_plugin.tasks.run_script
           inputs:
@@ -468,6 +476,8 @@ node_types:
             fabric_env: *simple_fabric_env
             ES_ENDPOINT_IP:
               default: { get_attribute: [elasticsearch, es_endpoint_ip] }
+            RABBITMQ_ENDPOINT_IP:
+              default: { get_attribute: [rabbitmq, rabbitmq_endpoint_ip] }
         configure:
           implementation: fabric.fabric_plugin.tasks.run_task
           inputs:
@@ -524,6 +534,8 @@ node_types:
             script_path:
               default: components/mgmtworker/scripts/create.sh
             fabric_env: *simple_fabric_env
+            RABBITMQ_ENDPOINT_IP:
+              default: { get_attribute: [rabbitmq, rabbitmq_endpoint_ip] }
         start:
           implementation: fabric.fabric_plugin.tasks.run_script
           inputs:
@@ -558,6 +570,8 @@ node_types:
             fabric_env: *simple_fabric_env
             INFLUXDB_ENDPOINT_IP:
               default: { get_attribute: [influxdb, influxdb_endpoint_ip] }
+            RABBITMQ_ENDPOINT_IP:
+              default: { get_attribute: [rabbitmq, rabbitmq_endpoint_ip] }
         start:
           implementation: fabric.fabric_plugin.tasks.run_script
           inputs:
@@ -687,15 +701,28 @@ relationships:
         postconfigure: components/manager/scripts/set_manager_private_ip.sh
 
   rest_to_mgr_config:
-      derived_from: cloudify.relationships.depends_on
-      target_interfaces:
-        cloudify.interfaces.relationship_lifecycle:
-          preconfigure:
-            implementation: fabric.fabric_plugin.tasks.run_script
-            inputs:
-              script_path:
-                default: components/restservice/scripts/preconfigure.sh
-              fabric_env: *simple_fabric_env
+    derived_from: cloudify.relationships.depends_on
+    target_interfaces:
+      cloudify.interfaces.relationship_lifecycle:
+        preconfigure:
+          implementation: fabric.fabric_plugin.tasks.run_script
+          inputs:
+            script_path:
+              default: components/restservice/scripts/preconfigure.sh
+            fabric_env: *simple_fabric_env
+
+  rabbitmq_on_mgr_config:
+    derived_from: cloudify.relationships.depends_on
+    target_interfaces:
+      cloudify.interfaces.relationship_lifecycle:
+        postconfigure:
+          implementation: fabric.fabric_plugin.tasks.run_task
+          inputs:
+            tasks_file:
+              default: components/rabbitmq/scripts/set_agent_config_broker_ip.py
+            task_name:
+              default: set_broker_ip
+            fabric_env: *simple_fabric_env
 
   amqpinflux_to_rabbitmq:
     derived_from: cloudify.relationships.connected_to
