@@ -8,6 +8,7 @@ export RABBITMQ_SOURCE_URL=$(ctx node properties rabbitmq_rpm_source_url)  # (e.
 export RABBITMQ_FD_LIMIT=$(ctx node properties rabbitmq_fd_limit)
 export RABBITMQ_ENDPOINT_IP=$(ctx node properties rabbitmq_endpoint_ip)
 
+export RABBITMQ_ENDPOINT_PORT="5672"
 export RABBITMQ_LOG_BASE="/var/log/cloudify/rabbitmq"
 
 
@@ -82,6 +83,7 @@ if [ -z "${RABBITMQ_ENDPOINT_IP}" ]; then
     install_rabbitmq
 else
     BROKER_IP=${RABBITMQ_ENDPOINT_IP}
+    # wait_for_port "${RABBITMQ_ENDPOINT_PORT}" "${BROKER_IP}"
 fi
 
 ctx logger info "RabbitMQ Endpoint IP is: ${BROKER_IP}"

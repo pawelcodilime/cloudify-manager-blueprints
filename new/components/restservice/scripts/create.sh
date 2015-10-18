@@ -13,10 +13,9 @@ export REST_SERVICE_SOURCE_URL=$(ctx node properties rest_service_module_source_
 export PLUGINS_COMMON_SOURCE_URL=$(ctx node properties plugins_common_module_source_url)
 export SCRIPT_PLUGIN_SOURCE_URL=$(ctx node properties script_plugin_module_source_url)
 export AGENT_SOURCE_URL=$(ctx node properties agent_module_source_url)
-# injected as an input to the script
-ctx instance runtime_properties rabbitmq_endpoint_ip ${RABBITMQ_ENDPOINT_IP}
 
 # injected as an input to the script
+ctx instance runtime_properties rabbitmq_endpoint_ip ${RABBITMQ_ENDPOINT_IP}
 ctx instance runtime_properties es_endpoint_ip ${ES_ENDPOINT_IP}
 
 # TODO: change to /opt/cloudify-rest-service

@@ -4,10 +4,9 @@
 
 export AMQPINFLUX_RPM_SOURCE_URL=$(ctx node properties amqpinflux_rpm_source_url)
 export AMQPINFLUX_SOURCE_URL=$(ctx node properties amqpinflux_module_source_url)
-# injected as an input to the script
-ctx instance runtime_properties rabbitmq_endpoint_ip ${RABBITMQ_ENDPOINT_IP}
 
 # injected as an input to the script
+ctx instance runtime_properties rabbitmq_endpoint_ip ${RABBITMQ_ENDPOINT_IP}
 ctx instance runtime_properties influxdb_endpoint_ip ${INFLUXDB_ENDPOINT_IP}
 
 export AMQPINFLUX_HOME="/opt/amqpinflux"
