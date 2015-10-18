@@ -445,17 +445,17 @@ node_templates:
       # - type: nginx_to_webui
       #   target: webui
 
-#  riemann:
-#    type: manager.nodes.Riemann
-#    relationships:
-#      - type: cloudify.relationships.contained_in
-#        target: manager_host
-#      - type: cloudify.relationships.depends_on
-#        target: java_runtime
-#      - type: riemann_to_rabbitmq
-#        target: rabbitmq
-#      - type: riemann_to_nginx
-#        target: nginx
+  riemann:
+    type: manager.nodes.Riemann
+    relationships:
+      - type: cloudify.relationships.contained_in
+        target: manager_host
+      - type: cloudify.relationships.depends_on
+        target: java_runtime
+      - type: riemann_to_rabbitmq
+        target: rabbitmq
+      - type: riemann_to_nginx
+        target: nginx
 
   rest_service:
     type: manager.nodes.RestService
