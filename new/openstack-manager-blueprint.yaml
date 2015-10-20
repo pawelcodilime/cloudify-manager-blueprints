@@ -83,7 +83,7 @@ inputs:
     type: string
 
   agents_user:
-    default: ubuntu
+    default: centos
     type: string
 
   resources_prefix:
