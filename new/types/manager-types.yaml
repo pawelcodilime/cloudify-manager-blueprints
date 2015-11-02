@@ -91,6 +91,10 @@ node_types:
                     password: { get_input: admin_password }
                     groups:
                       - cfy_admins
+                  - username: { get_input: agent_username }
+                    password: { get_input: agent_password }
+                    groups:
+                      - cfy_admins
                 groups:
                   - name: cfy_admins
                     roles:
@@ -115,6 +119,7 @@ node_types:
           #########################################################################
           ssl:
             enabled: { get_input: ssl_enabled }
+            verify_certificate: { get_input: verify_certificate }
           #########################################################################
           # Security log file properties (Optional, the default values are as
           # shown below).
@@ -626,6 +631,12 @@ node_types:
             script_path:
               default: components/mgmtworker/scripts/create.sh
             fabric_env: *simple_fabric_env
+        configure:
+          implementation: fabric.fabric_plugin.tasks.run_script
+          inputs:
+            script_path:
+              default: components/mgmtworker/scripts/configure.sh
+            fabric_env: *simple_fabric_env
         start:
           implementation: fabric.fabric_plugin.tasks.run_script
           inputs:
@@ -801,6 +812,12 @@ relationships:
 
   mgmtworker_to_rabbitmq:
     derived_from: cloudify.relationships.connected_to
+
+  mgmtworker_to_managerconfig:
+    derived_from: cloudify.relationships.connected_to
+    target_interfaces:
+      cloudify.interfaces.relationship_lifecycle:
+        preconfigure: components/mgmtworker/scripts/preconfigure.sh
 
   mgmtworker_to_nginx:
     derived_from: cloudify.relationships.connected_to
