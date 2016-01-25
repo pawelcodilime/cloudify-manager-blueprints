@@ -3,15 +3,22 @@
 . $(ctx download-resource "components/utils")
 
 
-function _set_rest_port() {
+function _set_rest_port_and_protocol() {
     security_enabled=$(ctx -j node properties security.enabled)
     ssl_enabled=$(ctx -j node properties security.ssl.enabled)
     if ${security_enabled} == true && ${ssl_enabled} == true ; then
         ctx logger info "SSL is enabled, setting rest port to 443..."
         ctx instance runtime_properties rest_port 443
-        ctx instance runtime_properties rest_protocol https
+        secure_internal_communication=$(ctx -j node properties security.ssl.secure_internal_communication)
+        if ${secure_internal_communication} == true; then
+            ctx logger info "secure_internal_communication is enabled, setting rest protocol to https..."
+            ctx instance runtime_properties rest_protocol https
+        else
+            ctx logger info "secure_internal_communication is disabled, setting rest protocol to http..."
+            ctx instance runtime_properties rest_protocol http
+        fi
     else
-        ctx logger info "Security is off or SSL not enabled, setting rest port to 80..."
+        ctx logger info "Security is off or SSL disabled, setting rest port to 80 and rest protocol to http..."
         ctx instance runtime_properties rest_port 80
         ctx instance runtime_properties rest_protocol http
     fi
