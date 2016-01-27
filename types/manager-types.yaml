@@ -115,6 +115,7 @@ node_types:
           #########################################################################
           ssl:
             enabled: { get_input: ssl_enabled }
+            secure_internal_communication: { get_input: secure_internal_communication_enabled }
           #########################################################################
           # Security log file properties (Optional, the default values are as
           # shown below).
@@ -398,8 +399,6 @@ node_types:
             script_path:
               default: components/nginx/scripts/create.sh
             fabric_env: *simple_fabric_env
-            REST_PROTOCOL:
-              default: { get_attribute: [manager_configuration, rest_protocol] }
         configure:
           implementation: fabric.fabric_plugin.tasks.run_task
           inputs:
